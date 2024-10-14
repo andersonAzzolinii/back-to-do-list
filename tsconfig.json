@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "esnext", // ou "es2017" ou superior
+    "module": "commonjs", // Use "commonjs" se estiver usando Node.js
+    "outDir": "./dist", // O diretório de saída para arquivos compilados
+    "rootDir": "./src", // O diretório de origem para os arquivos TypeScript
+    "esModuleInterop": true, // Para permitir importações de módulos ES
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
