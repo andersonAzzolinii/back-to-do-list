@@ -21,8 +21,15 @@ export class UserRepository {
     try {
       return await this.repository.findOne({ where: { username } });
     } catch (error) {
-      console.error(`Error to verify user existence ${error}`)
+      console.error(`UserRepository: error to verify user existence ${error}`)
     }
   }
 
+  async getById(id: string) {
+    try {
+      return await this.repository.findOne({ where: { id } });
+    } catch (error) {
+      console.error(`UserRepository: error to verify user existence ${error}`)
+    }
+  }
 }

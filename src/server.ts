@@ -14,7 +14,7 @@ AppDataSource.initialize()
     await AppDataSource.runMigrations()
 
     app.use('/api/auth', authRoutes(AppDataSource));
-    app.use('/api', authenticateJWT, routes(AppDataSource));
+    app.use('/api', authenticateJWT, routes());
     app.use(errorMiddleware)
     app.use((req: Request, res: Response) => {
       res.status(404).json({

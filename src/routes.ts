@@ -1,16 +1,17 @@
 // src/routes/userRoutes.ts
 import { Router } from 'express';
 import { DataSource } from 'typeorm';
-import { createActivity, deleteActivity, getActivities, updateActivity } from './controllers/acitivity';
+import { ActivityController } from './controllers/acitivity';
 
 const router = Router();
+const acitivityController = new ActivityController()
 
-export const routes = (dataSource: DataSource) => {
+export const routes = () => {
 
-  router.post('/activity', createActivity(dataSource))
-  router.put('/activity', updateActivity(dataSource))
-  router.delete('/activity/:id', deleteActivity(dataSource))
-  router.get('/activities', getActivities(dataSource))
+  router.post('/activity', acitivityController.createActivity)
+  router.put('/activity', acitivityController.updateActivity)
+  router.delete('/activity/:id', acitivityController.deleteActivity)
+  router.get('/activities', acitivityController.getActivities)
 
   return router;
 };
