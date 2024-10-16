@@ -3,6 +3,7 @@ import { AppDataSource } from '../data-source';
 import { Activity } from '../entities/Activity';
 import { createError } from '../helpers/errorHelper';
 import { UserRepository } from './user';
+import { ulid } from 'ulid';
 
 const userRepository = new UserRepository()
 export class ActivityRepository {
@@ -14,24 +15,25 @@ export class ActivityRepository {
 
   async create(id_user: string, title: string): Promise<Activity> {
     try {
-      const user = await userRepository.getById(id_user)
-      const acitivity = await this.repository.create({ user: user, title })
+      const id = ulid()
+      const result = await this.repository
+        .createQueryBuilder()
+        .insert()
+        .into(Activity)
+        .values({ id, user: { id: id_user }, title })
+        .returning(['completed', 'id', 'title', 'id_user'])
+        .execute();
 
-      return await this.repository
-        .save(acitivity)
+      return result.raw[0];
     } catch (error) {
       console.error(`ActivityRepository: error to create new activity ${error}`)
       throw error
     }
   }
 
-  async getAllWithOffset(page: number, pageSize: number, userId: string) {
+  async getAllWithOffset(limit: number, offset: number, userId: string) {
     try {
-
-      const pageNumber = page || 1;
-      const pageSizeNumber = pageSize || 20;
-      const offset = (pageNumber - 1) * pageSizeNumber;
-
+      console.log(limit, offset)
       const user = await userRepository.getById(userId)
       if (!user)
         return createError('User not found', 404)
@@ -40,9 +42,10 @@ export class ActivityRepository {
       SELECT * FROM activity 
       WHERE id_user = $1 
         AND exclusion_date is null
+      ORDER BY activity.create_date desc  
       LIMIT $2 
       OFFSET $3
-    `, [userId, pageSizeNumber, offset]);
+    `, [userId, limit, offset]);
 
     } catch (error) {
       console.error(`ActivityRepository: error to get activities ${error}`)

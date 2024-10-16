@@ -13,7 +13,7 @@ AppDataSource.initialize()
   .then(async () => {
     await AppDataSource.runMigrations()
 
-    app.use('/api/auth', authRoutes(AppDataSource));
+    app.use('/api/auth', authRoutes());
     app.use('/api', authenticateJWT, routes());
     app.use(errorMiddleware)
     app.use((req: Request, res: Response) => {

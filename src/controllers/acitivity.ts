@@ -1,8 +1,10 @@
 import { NextFunction, Response, Request } from "express";
 import { createError } from "../helpers/errorHelper";
 import { ActivityRepository } from "../repositories/activity";
+import { UserRepository } from "../repositories/user";
 
 const activityRepository = new ActivityRepository()
+const userRepository = new UserRepository()
 export class ActivityController {
 
   async createActivity(req: Request, res: Response, next: NextFunction) {
@@ -18,11 +20,15 @@ export class ActivityController {
     }
   }
 
-  async getActivities(req: Request, res: Response) {
-    const { page, pageSize, } = req.query;
-    const userId = req.query.user as string;
+  async getActivities(req: Request, res: Response, next: NextFunction) {
+    const { limit, offset, } = req.query;
+    const userId = req.query.id_user as string;
 
-    const registers = await activityRepository.getAllWithOffset(Number(page), Number(pageSize), userId)
+    const user = await userRepository.getById(userId)
+    if (!user)
+      return next(createError('User not found.', 404));
+
+    const registers = await activityRepository.getAllWithOffset(Number(limit), Number(offset), userId)
 
     res.status(200).json({ data: registers });
   }
@@ -56,7 +62,7 @@ export class ActivityController {
       if (!activity)
         return next(createError('Activity not found.', 404));
 
-      const result = await activityRepository.update(activity);
+      const result = await activityRepository.delete(activity);
 
       res.status(201).json({
         message: 'Activity deleted successfully.',
