@@ -36,7 +36,9 @@ npm run typeorm:generate
 to generate de first migration.
 
 7. run
-```npm start
+```
+npm start
+```
 and await the migration creates.
 8 - setup must be ok.
 
