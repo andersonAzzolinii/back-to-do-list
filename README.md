@@ -40,5 +40,5 @@ to generate de first migration.
 npm start
 ```
 and await the migration creates.
-8 - setup must be ok.
+8. setup must be ok.
 
