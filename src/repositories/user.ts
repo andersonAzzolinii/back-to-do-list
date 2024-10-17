@@ -12,16 +12,23 @@ export class UserRepository {
   }
 
   async createUser(username: string, password: string): Promise<User> {
-    const user = this.repository.create({ username, password, });
-    await this.repository.save(user);
-    return user;
+    try {
+      const user = this.repository.create({ username, password, });
+      await this.repository.save(user);
+      return user;
+
+    } catch (error) {
+      console.error(`UserRepository.createUser: Error to create user ${error}`)
+      throw error
+    }
   }
 
   async getByUsername(username) {
     try {
       return await this.repository.findOne({ where: { username } });
     } catch (error) {
-      console.error(`UserRepository: error to verify user existence ${error}`)
+      console.error(`UserRepository.getByUsername: error to verify user existence ${error}`)
+      throw error
     }
   }
 
@@ -29,7 +36,8 @@ export class UserRepository {
     try {
       return await this.repository.findOne({ where: { id } });
     } catch (error) {
-      console.error(`UserRepository: error to verify user existence ${error}`)
+      console.error(`UserRepository.getById: error to verify user existence ${error}`)
+      throw error
     }
   }
 }

@@ -26,14 +26,13 @@ export class ActivityRepository {
 
       return result.raw[0];
     } catch (error) {
-      console.error(`ActivityRepository: error to create new activity ${error}`)
+      console.error(`ActivityRepository.create: error to create new activity ${error}`)
       throw error
     }
   }
 
   async getAllWithOffset(limit: number, offset: number, userId: string) {
     try {
-      console.log(limit, offset)
       const user = await userRepository.getById(userId)
       if (!user)
         return createError('User not found', 404)
@@ -48,7 +47,7 @@ export class ActivityRepository {
     `, [userId, limit, offset]);
 
     } catch (error) {
-      console.error(`ActivityRepository: error to get activities ${error}`)
+      console.error(`ActivityRepository.getAllWithOffset: error to get activities ${error}`)
       throw error
     }
   }
@@ -58,7 +57,7 @@ export class ActivityRepository {
       body.done_date = body.completed ? new Date() : null
       return await this.repository.update(body.id, body);
     } catch (error) {
-      console.error(`ActivityRepository: error to update activity`)
+      console.error(`ActivityRepository.update: error to update activity`)
       throw error
     }
   }
@@ -68,7 +67,7 @@ export class ActivityRepository {
       acitivity.exclusion_date = new Date
       return await this.repository.update(acitivity.id, acitivity);
     } catch (error) {
-      console.error(`ActivityRepository: error to update activity`)
+      console.error(`ActivityRepository.delete: error to update activity`)
       throw error
     }
   }
@@ -77,7 +76,8 @@ export class ActivityRepository {
     try {
       return await this.repository.findOneBy({ id })
     } catch (error) {
-      console.error(`ActivityRepository: error to find activity`)
+      console.error(`ActivityRepository.findPerId: error to find activity`)
+      throw error
     }
   }
 }
